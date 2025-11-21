@@ -2,7 +2,7 @@
 
 import express from "express";
 
-const reuter = express.Router();
+const router = express.Router();
 // 특정 아이디에 대한 포스트 가져오기
 
 // 글 번호에 대한 포스트 가져오기

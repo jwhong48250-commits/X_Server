@@ -30,6 +30,7 @@ router.post("/signup", validateSignup, authController.signup);
 
 // 로그인
 router.post("/login", validateLogin, authController.login);
+
 // 로그인 유지
 
 export default router;

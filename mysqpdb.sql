@@ -16,3 +16,5 @@ create table posts (
     text varchar(2000) not null,
     foreign key(useridx) references users(idx)
 );
+select * from users;
+select * from posts;

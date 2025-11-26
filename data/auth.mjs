@@ -1,74 +1,54 @@
 // 회원 가입 정보
+import MongoDB from "mongodb";
+// import { getUsers } from "../db/database.mjs";
+import { userVirtualId } from "../db/database.mjs";
+import mongoose from "mongoose";
 
-let users = [
+// const ObjectID = MongoDB.ObjectId;
+
+// versionKey: mongoose 가 문서를 저장할때 자동으로 추가하는 -v라는 필드를 설정
+/*
   {
-    id: "1",
-    userid: "apple",
-    password: "1111",
-    name: "김사과",
-    email: "apple@apple.com",
-    url: "https://randomuser.me/api/portraits/women/32.jpg",
-  },
+    "_id": "3124546",
+    "userid:"apple
+    _v
+  }
+*/
+const userSchema = new mongoose.Schema(
   {
-    id: "2",
-    userid: "banana",
-    password: "2222",
-    name: "반하나",
-    email: "banana@banana.com",
-    url: "https://randomuser.me/api/portraits/women/44.jpg",
+    userid: { type: String, require: true },
+    name: { type: String, require: true },
+    email: { type: String, require: true },
+    password: { type: String, require: true },
+    url: String,
   },
-  {
-    id: "3",
-    userid: "orange",
-    password: "3333",
-    name: "오렌지",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/11.jpg",
-  },
-  {
-    id: "4",
-    userid: "berry",
-    password: "4444",
-    name: "배애리",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/women/52.jpg",
-  },
-  {
-    id: "5",
-    userid: "melon",
-    password: "5555",
-    name: "이메론",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/29.jpg",
-  },
-];
+  { versionKey: false }
+);
+
+userVirtualId(userSchema);
+const User = mongoose.model("User", userSchema);
 
 // 사용자 아이디에 대한 사용자를 리턴
-export async function createUser(userid, password, name, email) {
-  const user = {
-    id: Date.now().toString(),
-    userid,
-    password,
-    name,
-    email,
-    url: "https://randomuser.me/api/portraits/men/29.jpg",
-  };
-  users = [user, ...users];
-  return user;
+export async function createUser(user) {
+  return new User(user).save().then((data) => data.id); // 데이터를 저장 후
 }
 
 // 로그인
-export async function login(userid, password) {
-  const user = users.find(
-    (user) => user.userid === userid && user.password === password
-  );
-  return user;
-}
+// export async function login(userid, password) {
+//   const user = users.find(
+//     (user) => user.userid === userid && user.password === password
+//   );
+//   return user;
+// }
 
 export async function findByUserid(userid) {
-  const user = users.find((user) => user.userid === userid);
-  return user;
+  return User.findOne({ userid });
 }
+
 export async function findById(id) {
-  return users.find((user) => user.id === id);
+  return User.findById(id);
 }
+
+// function mapOptionalUser(user) {
+//   return user ? { ...user, id: user._id.toString() } : user;
+// }

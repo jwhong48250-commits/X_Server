@@ -27,9 +27,8 @@ export async function signup(req, res, next) {
     url,
   });
   //   const user = await authRepository.createUser(userid, password, name, email);
-  const token = await createJwtToken(user.id);
-  console.log(token);
-  res.status(201).json({ token, user });
+  const token = await createJwtToken(user);
+  res.status(201).json({ token, userid });
 }
 
 //로그인
@@ -44,7 +43,7 @@ export async function login(req, res, next) {
     return res.status(401).json({ message: `아이디 또는 비밀번호 확인` });
   }
   const token = await createJwtToken(user.id);
-  res.status(200).json({ token, user });
+  res.status(200).json({ token, userid });
 }
 
 export async function me(req, res, next) {
